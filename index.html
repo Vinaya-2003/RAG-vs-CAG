@@ -145,14 +145,11 @@
             </button>
         </div>
 
-        <!-- LinkedIn Post Drawer Button -->
+        <!-- Camera Reset Control -->
         <div class="flex items-center gap-2 pointer-events-auto">
-            <button onclick="resetCameraView()" title="Reset 3D Camera" class="glass-panel p-2.5 rounded-xl text-slate-300 hover:text-white hover:border-slate-500 transition">
-                <i data-lucide="focus" class="w-4 h-4"></i>
-            </button>
-            <button onclick="toggleLinkedInDrawer(true)" class="glass-panel px-3.5 py-2.5 rounded-xl text-xs font-semibold text-sky-300 hover:text-white hover:bg-sky-500/20 border-sky-500/30 transition flex items-center gap-2 shadow-lg">
-                <i data-lucide="share-2" class="w-4 h-4 text-sky-400"></i>
-                <span>LinkedIn Post Copy</span>
+            <button onclick="resetCameraView()" title="Reset 3D Camera" class="glass-panel px-3 py-2.5 rounded-xl text-xs font-semibold text-slate-300 hover:text-white hover:border-slate-500 transition flex items-center gap-1.5">
+                <i data-lucide="focus" class="w-4 h-4 text-sky-400"></i>
+                <span class="hidden sm:inline">Reset Camera</span>
             </button>
         </div>
     </header>
@@ -355,71 +352,6 @@
             <span>Top-K Activated Vector Nodes</span>
         </div>
     </footer>
-
-    <!-- LINKEDIN POST DRAWER MODAL -->
-    <div id="linkedin-drawer" class="fixed inset-0 z-50 bg-slate-950/75 backdrop-blur-md hidden items-center justify-center p-4">
-        <div class="glass-panel max-w-2xl w-full rounded-3xl p-6 border border-sky-500/30 shadow-2xl flex flex-col max-h-[90vh]">
-            <div class="flex items-center justify-between pb-4 border-b border-slate-800">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-xl bg-sky-500/20 border border-sky-500/40 flex items-center justify-center text-sky-400">
-                        <i data-lucide="linkedin" class="w-5 h-5"></i>
-                    </div>
-                    <div>
-                        <h3 class="text-base font-bold text-white">Ready-to-Publish LinkedIn Post</h3>
-                        <p class="text-xs text-slate-400">Pair this post with a screen recording of the 3D simulator</p>
-                    </div>
-                </div>
-                <button onclick="toggleLinkedInDrawer(false)" class="p-2 rounded-xl bg-slate-800/70 text-slate-400 hover:text-white">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-
-            <!-- Post Content Box -->
-            <div class="my-4 overflow-y-auto pr-2 space-y-3 text-xs md:text-sm text-slate-200 leading-relaxed font-sans bg-slate-900/80 p-4 rounded-2xl border border-slate-800 select-all" id="linkedin-post-text">
-<p class="font-semibold text-white">Is RAG already becoming a bottleneck for static knowledge bases? Let’s talk about RAG vs. CAG (Cache-Augmented Generation). 👇</p>
-
-<p>For the last two years, <strong>RAG (Retrieval-Augmented Generation)</strong> has been the undisputed default for grounding LLMs in enterprise data. Every user query triggers a multi-hop relay race:<br>
-1️⃣ Embed the user query<br>
-2️⃣ Run Approximate Nearest Neighbor (ANN) search across a Vector DB<br>
-3️⃣ Fetch Top-K chunks &amp; pass through a Cross-Encoder Reranker<br>
-4️⃣ Stuff context into the prompt &amp; compute attention from scratch</p>
-
-<p>That works wonders for massive, constantly mutating datasets. <strong>But what if your core knowledge base is under 1M tokens and rarely changes?</strong></p>
-
-<p>Enter <strong>CAG (Cache-Augmented Generation)</strong>.</p>
-
-<p>With modern long-context windows and prefix KV-caching, CAG flips the architecture on its head:<br>
-⚡ <strong>Zero Runtime Retrieval:</strong> You preload your entire reference corpus into the model’s Key-Value (KV) Attention Cache once.<br>
-⚡ <strong>80–90% Lower TTFT:</strong> Queries hit the precomputed KV ring directly in GPU HBM memory—skipping embedding, vector lookup, and reranking latency.<br>
-⚡ <strong>Zero Chunk-Boundary Blindspots:</strong> The LLM attends across the entire corpus holistically instead of isolated Top-K fragments.</p>
-
-<p><strong>So does CAG kill RAG? No—the real winner in production is Hybrid Tiered Architecture:</strong><br>
-🟢 <strong>Tier-0 (CAG):</strong> Pin your "hot" static policies, product manuals, and core schemas directly in KV-Cache for sub-100ms responses.<br>
-🟠 <strong>Tier-1 (RAG):</strong> Route live, user-specific, or petabyte-scale long-tail queries to your Vector DB only when needed.</p>
-
-<p>I built an interactive 3D WebGL telemetry simulator (Three.js) to visualize how query packets travel through RAG, CAG, and Hybrid pipelines in real time.</p>
-
-<p>💬 <strong>How much of your current RAG pipeline is actually querying static data that could be pinned in KV-Cache?</strong></p>
-
-<p class="text-sky-400 font-mono-code text-xs">#GenAI #LLM #RAG #CAG #AIEngineering #MachineLearning #SystemArchitecture #ThreeJS</p>
-            </div>
-
-            <div class="flex items-center justify-between pt-2">
-                <span id="copy-feedback" class="text-xs font-mono-code text-emerald-400 opacity-0 transition-opacity">
-                    ✓ Copied to clipboard! Ready to paste on LinkedIn.
-                </span>
-                <div class="flex gap-2">
-                    <button onclick="toggleLinkedInDrawer(false)" class="px-4 py-2 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white transition">
-                        Close
-                    </button>
-                    <button onclick="copyLinkedInPost()" class="px-5 py-2 rounded-xl text-xs font-bold bg-sky-500 hover:bg-sky-400 text-slate-950 transition flex items-center gap-2 shadow-lg shadow-sky-500/25">
-                        <i data-lucide="copy" class="w-4 h-4"></i>
-                        <span>Copy Post Text</span>
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
 
     <script>
         // Initialize Lucide icons
@@ -817,7 +749,7 @@
             interactiveMeshes.push(routerMesh);
             registerLabel(routerMesh, "Semantic Router", "Checks Tier-0 Hot Cache", "purple", 2.2);
 
-            // 3. Upper Fast Path: Tier-0 KV-Cache Ring + LLM Core (6, 2.5, 0)
+            // 3. Upper Fast Path: Tier-0 KV-Cache Ring + LLM Core (7, 1.5, 0)
             const llmGeo = new THREE.IcosahedronGeometry(2.1, 2);
             const llmMat = new THREE.MeshPhongMaterial({ color: 0x38bdf8, emissive: 0x0284c7, emissiveIntensity: 0.6, flatShading: true });
             hybridLLMCore = new THREE.Mesh(llmGeo, llmMat);
@@ -1311,38 +1243,6 @@
             camera.aspect = window.innerWidth / window.innerHeight;
             camera.updateProjectionMatrix();
             renderer.setSize(window.innerWidth, window.innerHeight);
-        }
-
-        // ============================================================================
-        // LINKEDIN DRAWER & CLIPBOARD COPY
-        // ============================================================================
-        function toggleLinkedInDrawer(show) {
-            const drawer = document.getElementById('linkedin-drawer');
-            if (show) {
-                drawer.classList.remove('hidden');
-                drawer.classList.add('flex');
-            } else {
-                drawer.classList.add('hidden');
-                drawer.classList.remove('flex');
-            }
-        }
-
-        function copyLinkedInPost() {
-            const container = document.getElementById('linkedin-post-text');
-            const text = container.innerText;
-
-            const textarea = document.createElement('textarea');
-            textarea.value = text;
-            document.body.appendChild(textarea);
-            textarea.select();
-            document.execCommand('copy');
-            document.body.removeChild(textarea);
-
-            const feedback = document.getElementById('copy-feedback');
-            feedback.style.opacity = '1';
-            setTimeout(() => {
-                feedback.style.opacity = '0';
-            }, 3000);
         }
 
         // ============================================================================
