@@ -1,8 +1,100 @@
-🧠 RAG vs. CAG vs. Hybrid — Interactive 3D Architecture ExplorerAn interactive WebGL / Three.js 3D telemetry simulator that visualizes, benchmarks, and compares Retrieval-Augmented Generation (RAG), Cache-Augmented Generation (CAG), and Hybrid Tiered (CAG + RAG) LLM inference pipelines in real time.Built to demonstrate how preloading bounded, static knowledge bases directly into an LLM's Key-Value (KV) Attention Cache eliminates multi-hop runtime retrieval overhead—cutting Time-To-First-Token (TTFT) latency by up to 9.4x (~62ms vs ~580ms)—while illustrating why distributed vector search remains critical for massive or rapidly mutating datasets.📸 PreviewSide-by-Side ComparisonRAG Multi-Hop PipelineCAG Direct KV PipelineHybrid Tiered Routing (CAG + RAG)✨ Key Features4 Interactive 3D View ModesSide-by-Side (Compare): Simultaneous 3D visualization comparing the 6-stage RAG multi-hop pipeline against the 3-stage CAG direct KV-cache express pipeline.RAG Pipeline (RAG): Isolated inspection of query dense embedding (+45ms), 3D Vector DB ANN cluster search (+190ms), Cross-Encoder Top-K Reranking (+140ms), and LLM Full Context Prefill.CAG Pipeline (CAG): Isolated inspection of direct ingress into the LLM Core surrounded by a preloaded orbital KV-Cache Ring (+18ms lookup, zero runtime retrieval hops).Hybrid Tiered (Hybrid): Demonstrates production semantic routing where 80% of hot/static queries hit the Tier-0 KV Ring and 20% of live/volatile queries fall back to the Tier-1 Live Vector DB. Includes an interactive Tier-0 Hit / Live Fallback route switcher.Real-Time Particle Telemetry & Latency Chronometer: Click "Send Test Query Pulse" to dispatch glowing token packets across active pipelines and watch live millisecond TTFT race bars.Dynamic Workload & VRAM Calculator: Interactive sliders for Corpus Size (Tokens) (10K to 100M+) and Data Volatility (Updates) dynamically compute KV-Cache HBM VRAM footprint, stage-by-stage latency breakdowns, and an automated architecture recommendation (PURE CAG, HYBRID TIERED, or DYNAMIC RAG).Raycasting 3D Node Inspector: Click directly on any 3D component in the WebGL viewport (or use the quick-inspect pills) to inspect its architectural role, advantages, and primary bottlenecks.🏗️ Architectural Breakdown Modeled in 3DPipeline ModeStages Modeled in 3DSimulated TTFTIdeal Workload ProfileRAG (Multi-Hop)User Query → Embedding Model (+45ms) → Vector DB Cluster (+190ms) → Cross-Encoder Reranker (+140ms) → LLM Core (Full Prefill) → RAG Response~580msLarge-scale corpora (>1M tokens) or high-volatility live data streamsCAG (Direct KV)User Query → LLM Core + Preloaded KV Ring (+18ms) → Instant CAG Stream~62msBounded corpora (≤650K tokens) with static or infrequently updated docsHybrid (Tiered)User Query → Semantic Router (+8ms) → Tier-0 KV Ring (80% Hot) OR Tier-1 Live Vector DB (20% Cold) → Unified Output~65ms (Hit) / ~480ms (Fallback)Enterprise production combining static core manuals with live transactional records3D Geometries & Visual LanguageIngress & Egress Nodes (THREE.SphereGeometry): Glowing spheres representing prompt ingress and token stream egress.Dense Embedding Engine (THREE.OctahedronGeometry): Faceted amber polyhedron representing text-to-vector transformation (+45ms).Vector DB Cluster (3x3x3 THREE.BoxGeometry Grid + Wireframe Bounds): 27-node 3D HNSW lattice where Top-K semantic match nodes pulse in cyan during ANN graph traversal (+190ms).Cross-Encoder Reranker (THREE.CylinderGeometry): Hexagonal rose prism scoring and pruning Top-K retrieved chunks (+140ms).RAG LLM Core (THREE.IcosahedronGeometry + Wireframe Shell): Orange core illustrating runtime context prefill computation across retrieved chunks.CAG LLM Core + Preloaded KV-Cache Ring (THREE.IcosahedronGeometry + Dual THREE.TorusGeometry Rings): Cyan core encircled by dual tilted emerald orbital rings representing pre-computed Key-Value attention tensors pinned in GPU HBM memory (+18ms). Ring thickness scales dynamically with the Corpus Size slider.Tiered Semantic Router (THREE.OctahedronGeometry): Purple diamond orchestrator in Hybrid mode that dynamically routes traffic between Tier-0 KV memory and Tier-1 Vector DB fallback.🛠️ Tech Stack3D WebGL Engine: Three.js (r128) — WebGLRenderer, PerspectiveCamera, Raycaster, CatmullRomCurve3, TubeGeometry, FogExp2, and procedural 3D meshes.Camera & Viewport Physics: Custom spherical coordinate orbit controller with smooth damping interpolation (lerp) and automated camera choreography across view modes.3D-to-2D Spatial HUD Projection: Real-time frustum projection (Vector3.project(camera)) anchoring crisp HTML/CSS glassmorphic telemetry badges directly above moving 3D nodes.UI & Styling: Tailwind CSS (CDN) paired with custom CSS glassmorphism (backdrop-filter: blur(16px)), dark-space grid aesthetics, and responsive panels.Typography: Google Fonts (Inter for UI hierarchy and JetBrains Mono for live latency counters and VRAM metrics).Icons: Lucide Icons for telemetry badges and interactive controls.Packaging: Zero-build, dependency-free single-file HTML5 bundle (rag_vs_cag_3d_simulator.html) that runs natively in any modern browser.📂 Project Structure.
-├── rag_vs_cag_3d_simulator.html   # Standalone single-file 3D WebGL application
-├── screenshots/                   # Optional directory for repository preview images
-└── README.md                      # Project documentation
-🚀 Getting StartedBecause the entire simulator is built as a standalone, zero-build WebGL application, you can run it immediately without npm or bundler configuration:Clone the repository:git clone https://github.com/your-username/rag-vs-cag-3d-explorer.git
-cd rag-vs-cag-3d-explorer
-Launch in your browser:Double-click rag_vs_cag_3d_simulator.html (or rename to index.html for GitHub Pages / Vercel / Netlify deployment), orServe locally via Python or VS Code Live Server:python3 -m http.server 8080
-Open http://localhost:8080/rag_vs_cag_3d_simulator.html in any modern WebGL-enabled browser (Chrome, Edge, Firefox, or Safari).🎮 Controls & Interaction GuideOrbit / Rotate 3D Scene: Left-click + Drag anywhere on the 3D canvas.Zoom In / Out: Mouse scroll wheel or trackpad pinch.Inspect 3D Component: Click directly on any 3D node in the scene (or click the quick-inspect pills in the right-hand panel) to view its architectural telemetry.Switch Architecture Mode: Use the top-center mode tabs (Side-by-Side, RAG Pipeline, CAG Pipeline, Hybrid (Tiered)).Reset Camera: Click the Reset Camera button in the top-right corner to re-center the active pipeline.Run Latency Benchmark: Click "Send Test Query Pulse" in the left panel to launch query packets and compare real-time TTFT progress bars.📄 LicenseDistributed under the MIT License. Free to use, modify, and embed for AI engineering demonstrations, system architecture reviews, and educational content.
+# 🧠 RAG vs. CAG vs. Hybrid — Interactive 3D Architecture Explorer
+
+An interactive WebGL / Three.js 3D architecture simulator that visualizes, benchmarks, and compares **Retrieval-Augmented Generation (RAG)**, **Cache-Augmented Generation (CAG)**, and **Hybrid Tiered (CAG + RAG)** LLM inference pipelines in real time.
+
+Built to demonstrate how preloading static knowledge into an LLM's extended **Key-Value (KV) Cache** eliminates multi-hop runtime retrieval overhead, cutting Time-To-First-Token (TTFT) latency by up to **9x** (`~62ms` vs `~580ms`) while illustrating when dynamic vector search remains essential.
+
+---
+
+## ✨ Key Features
+
+* **4 Interactive 3D View Modes**
+  * **Side-by-Side Comparison (`Compare Both`)**: Simultaneous 3D visualization of the 6-stage RAG multi-hop pipeline against the 3-stage CAG direct KV-cache express path.
+  * **RAG Pipeline View**: Isolated inspection of query embedding (`+45ms`), 3D Vector DB ANN cluster search (`+190ms`), Cross-Encoder Top-K Reranking (`+140ms`), and LLM Full Context Prefill.
+  * **CAG Pipeline View**: Isolated inspection of direct ingress into the LLM Core surrounded by a preloaded orbital KV-Cache Ring (`+18ms` zero runtime retrieval).
+  * **Hybrid Tiered View (`CAG + RAG`)**: Demonstrates production-grade semantic routing where `80%` of hot/static queries hit the Tier-0 KV Ring and `20%` of live/volatile queries fall back to the Tier-1 Live Vector DB.
+* **Real-Time Particle Telemetry & Latency Race**: Launch test query pulses across pipelines to watch packet traversal speeds, Top-K vector node activations, and live millisecond TTFT race counters.
+* **Dynamic Workload & VRAM Calculator**: Interactive sliders for **Corpus Size (Tokens)** and **Data Volatility (Update Frequency)** dynamically compute KV-Cache VRAM usage, latency breakdowns, and an automated architecture recommendation.
+* **Raycasting 3D Node Inspector**: Click directly on any 3D geometry in the viewport (or select quick-inspect pills) to view component telemetry, architectural roles, pros, and primary bottlenecks.
+
+---
+
+## 🏗️ Architectural Breakdown Modeled in the Scene
+
+| Pipeline Mode | Stages Modeled in 3D | Simulated TTFT | Ideal Workload Profile |
+| :--- | :--- | :--- | :--- |
+| **RAG (Multi-Hop)** | `User Query` → `Embedding Model (+45ms)` → `Vector DB Cluster (+190ms)` → `Cross-Encoder Reranker (+140ms)` → `LLM Full Prefill` → `Response` | `~580ms` | Massive corpora (`>1M` tokens) or high-volatility live data |
+| **CAG (Direct KV)** | `User Query` → `LLM Core + Preloaded KV Ring (+18ms)` → `Instant Stream` | `~62ms` | Bounded corpora (`<500K` tokens) with static/slow-changing docs |
+| **Hybrid (Tiered)** | `User Query` → `Semantic Router` → `Tier-0 KV Ring (80% Hot)` OR `Tier-1 Live Vector DB (20% Cold)` → `Unified Output` | `~145ms` Weighted | Enterprise production mixing core manuals with live feeds |
+
+### 3D Geometries & Visual Language
+* **Ingress / Egress Nodes (`SphereGeometry`)**: Cyan, amber, emerald, and violet spheres representing query ingress and token stream egress.
+* **Embedding Model (`IcosahedronGeometry`)**: Faceted golden polyhedron representing dense vector transformation (`+45ms`).
+* **Vector DB Cluster (`3x3x3 BoxGeometry Lattice + Wireframe Bounds`)**: 27-node 3D matrix where specific Top-K semantic match cubes illuminate in cyan during ANN similarity search (`+190ms`).
+* **Cross-Encoder Reranker (`BoxGeometry`)**: Rose-tinted filter block representing Top-K passage scoring and pruning (`+140ms`).
+* **RAG LLM Core (`IcosahedronGeometry + Wireframe Cage`)**: Amber core illustrating heavy runtime context prefill computation.
+* **CAG LLM Core + Preloaded KV Ring (`SphereGeometry + Dual TorusGeometry Rings`)**: Cyan core encircled by dual tilted emerald orbital rings representing pre-computed Key-Value tensors pinned in GPU VRAM (`+18ms`).
+* **Semantic Router (`OctahedronGeometry`)**: Purple diamond node in Hybrid mode that splits traffic between the Tier-0 KV cache path and the Tier-1 Vector DB fallback path.
+
+---
+
+## 📂 Project Structure
+
+```text
+RAG-vs-CAG/
+├── index.html   # Complete 3D WebGL simulator (Three.js scene, HUD UI, and telemetry logic)
+└── README.md    # Project documentation
+```
+
+---
+
+## 🛠️ Tech Stack
+
+* **3D Rendering Engine**: [Three.js](https://threejs.org/) (`r128`) — WebGLRenderer, PerspectiveCamera, Raycaster, CatmullRomCurve3, TubeGeometry, and custom procedural geometries.
+* **Camera & Viewport Controls**: `THREE.OrbitControls` with smooth damping (`enableDamping`) and custom linear interpolation (`lerp`) camera transitions between architecture modes.
+* **2D-to-3D Spatial HUD Labels**: Custom 3D world-to-screen projection (`Vector3.project(camera)`) rendering crisp HTML/CSS glassmorphic telemetry badges anchored above 3D meshes.
+* **Styling & UI Framework**: [Tailwind CSS](https://tailwindcss.com/) (CDN) paired with custom CSS glassmorphism (`backdrop-filter: blur(16px)`), dark-space grid styling, and responsive HUD overlays.
+* **Typography**: Google Fonts (`Space Grotesk` for technical headers, `Inter` for UI controls, and `JetBrains Mono` for latency and VRAM telemetry).
+* **Icons**: [Lucide Icons](https://lucide.dev/) for HUD controls and telemetry badges.
+* **Deployment Architecture**: Zero-build, dependency-free single-file HTML5 bundle (`index.html`) that runs directly in any modern WebGL-enabled browser.
+
+---
+
+## 🚀 Getting Started
+
+Because the entire simulator is packaged as a standalone, zero-build WebGL application, you can run it immediately without Node.js or bundler setup:
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/](https://github.com/)<your-username>/RAG-vs-CAG.git
+   cd RAG-vs-CAG
+   ```
+2. **Launch in your browser:**
+   * **Option A (VS Code Live Server):** Open the folder in VS Code and click **Go Live** in the bottom-right status bar (or right-click `index.html` → **Open with Live Server**).
+   * **Option B (Local HTTP Server):**
+     ```bash
+     # Windows (PowerShell / CMD)
+     python -m http.server 8080
+
+     # macOS / Linux
+     python3 -m http.server 8080
+     ```
+     Then open `http://localhost:8080` in Chrome, Edge, Firefox, or Safari.
+   * **Option C (Direct Open):** Double-click `index.html` in your file explorer.
+
+---
+
+## 🎮 Controls & Interaction Guide
+
+* **Orbit / Rotate Scene**: Left-click + Drag anywhere on the 3D canvas.
+* **Zoom In / Out**: Scroll wheel or pinch gesture.
+* **Pan Camera**: Right-click + Drag.
+* **Inspect 3D Component**: Click directly on any 3D node (or use the bottom-left quick-inspect pills) to load its deep-dive telemetry card.
+* **Switch Architecture Mode**: Use the top-center mode switcher (`Compare Both`, `RAG Pipeline`, `CAG Pipeline`, `Hybrid (CAG+RAG)`).
+* **Trigger Latency Benchmark**: Click **"Send Test Query Pulse"** in the left control panel to animate a live request race across the active pipelines.
+
+---
+
+## 📄 License
+
+Distributed under the MIT License. Free to use, remix, and share for architectural demonstrations, technical blog posts, and educational content.
